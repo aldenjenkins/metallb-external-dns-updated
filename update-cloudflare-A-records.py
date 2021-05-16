@@ -22,20 +22,15 @@ def main():
     txt_records = list(filter(lambda zone: zone['type'] == 'TXT', dns_records))
     a_domains = [record['name'] for record in a_records]
 
-    # dns_prefix is needed within external-dns because without it, A records with the LAN IP are automatically deleted
-    dns_prefix = os.getenv("CF_DNS_PREFIX")
-    assert dns_prefix, "CF_DNS_PREFIX must be set"
-
-    print(a_domains)
     txt_domains_to_create = []
     for txt_record in txt_records:
-        if "heritage=external-dns" in txt_record['content'] and txt_record['name'].replace(dns_prefix, '', 1) not in a_domains:
+        if "heritage=external-dns" in txt_record['content'] and txt_record['name'] not in a_domains:
             txt_domains_to_create.append(txt_record['name'])
 
     for domain in txt_domains_to_create:
         if domain in a_domains:
             continue
-        dns_record  = { 'name': domain.replace('.' + zone_name, '').replace(dns_prefix, '', 1), 'type':'A', 'content': my_ip, 'proxied': True }
+        dns_record  = { 'name': domain.replace('.' + zone_name, ''), 'type':'A', 'content': my_ip, 'proxied': True }
         cf.zones.dns_records.post(zone_id, data=dns_record)
         print(f'Created A record for {domain}')
 

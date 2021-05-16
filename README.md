@@ -22,7 +22,6 @@ releases:
       - rbac:
           create: true
         sources: [ingress]
-        txtPrefix: "external-dns-"
         policy: "create-only"
         provider: cloudflare
         cloudflare:
