@@ -1,8 +1,8 @@
-# Cloudflare Metallb External-DNS updating
+# Cloudflare Metallb External-DNS Dynamic A Record updating using WAN IP
 
-## Use TXT records created using external-dns to create corresponding A records
+Use TXT records created using external-dns to create corresponding A records
 
-* Example helmfile.yaml
+## Example helmfile.yaml
 
 ```
 environments:
